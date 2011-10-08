@@ -13,6 +13,10 @@ exports.addIncludeDir = function(dir) {
 	config.compileOptions = config.platformModule.addIncludeDir(config.compileOptions, dir);
 };
 
+exports.make = function(file) {
+	ice.make(file);
+};
+
 exports.makeLibrary = function(library) {
 	ice.make(library + config.libraryExt);
 };

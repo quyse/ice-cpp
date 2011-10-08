@@ -1,7 +1,7 @@
 /* Скрипт, конфигурирующий компиляцию.
  */
 
-var configuration = exports.configuration = process.env.CONFIGURATION || 'debug';
+var configuration = exports.configuration = process.env.CONF || 'debug';
 
 /** добавить завершающий /, если нет
  */
