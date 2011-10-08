@@ -1,0 +1,10 @@
+{
+  "author": "Quyse Lert <quyse0@gmail.com> (http://quyse.net)",
+  "name": "ice-cpp",
+  "description": "ice-cpp build system",
+  "version": "0.0.1",
+  "main": "build.js",
+  "dependencies": {
+  	"ice" >= "0.0"
+  }
+}
