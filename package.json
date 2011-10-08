@@ -5,6 +5,6 @@
   "version": "0.0.1",
   "main": "build.js",
   "dependencies": {
-  	"ice" >= "0.0"
+    "ice": ">=0.0"
   }
 }
