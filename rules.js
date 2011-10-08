@@ -20,39 +20,85 @@ var readListFile = function(fileName, file, callback) {
 	});
 };
 
-/** найти заголовочные файлы в исходнике
+/** найти все включения #include в исходнике
  */
-var findIncludeDeps = function(fileName, file, callback) {
+var findIncludeDeps = function(fileName, callback) {
 	fs.readFile(fileName, 'utf8', function(err, data) {
 		if (err)
-			file.error(err);
+			callback(err, null);
 		else {
-			var re = /\s*#\s*include\s*\"(.+)\"/gm;
-			var a;
+			var re = /\s*\#\s*include\s*\"(.+)\"/gm;
+			var a, arr = [];
 			while (a = re.exec(data))
-				file.dep(config.srcDir + a[1]);
-			callback();
+				arr.push(a[1]);
+			callback(null, arr);
 		}
 	});
 };
 
-// .hpp
-ice.rule(new RegExp('^' + ice.utils.regexpEscape(config.srcDir) + '(.+\\.hpp)$'), function(a, file) {
-	var hppFile = config.srcDir + a[1];
-	findIncludeDeps(hppFile, file, function() {
-		file.waitDeps(function() {
-			file.ok();
+/** кэш непосредственных зависимостей заголовочных файлов
+ */
+var cachedHeaderDependencies = {};
+/** найти все зависимости для заголовочного файла
+ */
+var getHeaderDeps = function(headerFile, callback) {
+	if (cachedHeaderDependencies[headerFile] === undefined) {
+		findIncludeDeps(config.srcDir + headerFile, function(err, headerFiles) {
+			if (err)
+				callback(err, null);
+			else {
+				cachedHeaderDependencies[headerFile] = headerFiles;
+				callback(null, headerFiles);
+			}
 		});
-	});
-});
+	} else
+		callback(null, cachedHeaderDependencies[headerFile]);
+};
+/** найти все зависимости для cpp-файла
+ */
+var getCppHeaderDeps = function(cppFile, file, callback) {
+	// список заголовочных файлов на просмотр зависимостей
+	var headerQueue = [];
+	// сет результирующего списка зависимостей
+	var resultSet = {};
+
+	// такой хак: первый файл в очереди - сам cpp
+	headerQueue.push(cppFile);
+
+	var i = 0;
+	var step = function() {
+		if (i < headerQueue.length) {
+			var headerFile = headerQueue[i++];
+
+			if (resultSet[headerFile] === undefined) {
+				if (headerFile != cppFile)
+					file.dep(config.srcDir + headerFile);
+				resultSet[headerFile] = true;
+
+				getHeaderDeps(headerFile, function(err, files) {
+					if (err)
+						file.error(err);
+					else {
+						headerQueue = headerQueue.concat(files);
+						step();
+					}
+				});
+			} else
+				step();
+		} else
+			callback();
+	};
+	step();
+};
 
 // obj/file.o <= file.cpp
 ice.rule(new RegExp('^(?:.*\\/)??([^\\/]+)' + ice.utils.regexpEscape(config.objectExt) + '$'), function(a, file) {
 	var objFile = a[0];
-	var cppFile = config.srcDir + a[1] + '.cpp';
+	var cppFileTitle = a[1] + '.cpp';
+	var cppFile = config.srcDir + cppFileTitle;
 	file.dep(cppFile);
 	file.waitDeps(function() {
-		findIncludeDeps(cppFile, file, function() {
+		getCppHeaderDeps(cppFileTitle, file, function() {
 			file.waitDeps(function() {
 				actions.compile(cppFile, objFile, function(err) {
 					if (err)
