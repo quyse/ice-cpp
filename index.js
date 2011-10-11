@@ -13,6 +13,14 @@ exports.addIncludeDir = function(dir) {
 	config.compileOptions = config.platformModule.addIncludeDir(config.compileOptions, dir);
 };
 
+exports.addDynamicLibrary = function(library) {
+	config.linkOptions = config.platformModule.addDynamicLibrary(config.linkOptions, library);
+};
+
+exports.addStaticLibrary = function(library) {
+	config.linkStaticLibraries = config.platformModule.addStaticLibrary(config.linkStaticLibraries, library);
+};
+
 exports.make = function(file) {
 	ice.make(file);
 };

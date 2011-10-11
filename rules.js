@@ -134,7 +134,7 @@ ice.rule(new RegExp('^(.*\\/)??(([^\\/]+)' + ice.utils.regexpEscape(config.libra
 });
 
 // правило для исполняемых файлов
-ice.rule(new RegExp('^(.*\\/)??(([^\\/]+)' + ice.utils.regexpEscape(config.executableExt) + ')$'), function(a, file) {
+ice.rule(new RegExp('^(.*\\/)??(([^\\/\\.]+)' + ice.utils.regexpEscape(config.executableExt) + ')$'), function(a, file) {
 	var dir = a[1] || '';
 	var executableFile = dir + a[2];
 	var listFile = a[3] + '.lst';

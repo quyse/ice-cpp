@@ -34,6 +34,7 @@ exports.objectExt = platformModule.objectExt;
 var linkOptions = getOptions(platformModule.linkOptions);
 exports.linkOptions = linkOptions;
 exports.executableExt = platformModule.executableExt;
+exports.linkStaticLibraries = [];
 
 var composeOptions = getOptions(platformModule.composeOptions);
 exports.composeOptions = composeOptions;
