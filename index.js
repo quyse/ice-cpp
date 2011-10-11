@@ -20,3 +20,7 @@ exports.make = function(file) {
 exports.makeLibrary = function(library) {
 	ice.make(library + config.libraryExt);
 };
+
+exports.makeExecutable = function(executable) {
+	ice.make(executable + config.executableExt);
+};

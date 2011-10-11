@@ -132,3 +132,25 @@ ice.rule(new RegExp('^(.*\\/)??(([^\\/]+)' + ice.utils.regexpEscape(config.libra
 		});
 	});
 });
+
+// правило для исполняемых файлов
+ice.rule(new RegExp('^(.*\\/)??(([^\\/]+)' + ice.utils.regexpEscape(config.executableExt) + ')$'), function(a, file) {
+	var dir = a[1] || '';
+	var executableFile = dir + a[2];
+	var listFile = a[3] + '.lst';
+
+	readListFile(listFile, file, function(files) {
+		files = files.map(function(v) {
+			return config.objDir + v + config.objectExt;
+		});
+		file.dep.apply(file, files);
+		file.waitDeps(function() {
+			actions.link(files, executableFile, function(err) {
+				if (err)
+					file.error(err);
+				else
+					file.ok();
+			});
+		});
+	});
+});
