@@ -25,11 +25,12 @@ exports.setCompileFiles = function(args, cppFile, objectFile) {
 };
 exports.objectExt = '.o';
 
-exports.linkCommand = 'ld';
+exports.linkCommand = 'g++';
+// http://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Link-Options.html
 exports.linkOptions = {
 	all: [ // опции для обоих конфигураций
 	'-fmessage-length=0', // отключить перенос слишком длинных строк
-	'-Wall', // показывать все (большинство) предупреждений
+	'-Wall', // показывать большинство ошибок
 	'-Werror', // превращать предупреждения в ошибки
 	],
 	debug: [ // опции для отладочной конфигурации
@@ -56,7 +57,7 @@ exports.composeOptions = {
 exports.setComposeFiles = function(args, objectFiles, targetFile) {
 	return args.concat(targetFile, objectFiles);
 };
-exports.libraryExt = '.a';
+var libraryExt = exports.libraryExt = '.a';
 
 exports.addMacro = function(args, macro) {
 	return args.concat('-D' + macro);
@@ -64,4 +65,12 @@ exports.addMacro = function(args, macro) {
 
 exports.addIncludeDir = function(args, dir) {
 	return args.concat('-I', dir);
+};
+
+exports.addDynamicLibrary = function(args, library) {
+	return args.concat('-l' + library);
+};
+
+exports.addStaticLibrary = function(args, library) {
+	return args.concat(library + libraryExt);
 };

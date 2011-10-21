@@ -39,6 +39,7 @@ exports.compile = function(cppFile, objectFile, callback) {
 exports.link = function(objectFiles, targetFile, callback) {
 	var args = config.linkOptions;
 	args = config.platformModule.setLinkFiles(args, objectFiles, targetFile);
+	args = args.concat(config.linkStaticLibraries);
 
 	launchProcess(config.platformModule.linkCommand, args, callback);
 };
