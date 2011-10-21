@@ -6,17 +6,19 @@ var invoking = require('./invoking');
  */
 var launchProcess = function(command, args, callback) {
 	invoking.invoke(function(end) {
-		var process = child_process.spawn(command, args);
+		var childProcess = child_process.spawn(command, args, {
+			env: config.env
+		});
 
 		var err = '';
-		process.stdout.on('data', function(data) {
+		childProcess.stdout.on('data', function(data) {
 			err += data;
 		});
-		process.stderr.on('data', function(data) {
+		childProcess.stderr.on('data', function(data) {
 			err += data;
 		});
 
-		process.on('exit', function(code) {
+		childProcess.on('exit', function(code) {
 			callback(code == 0 ? null : err);
 			end();
 		});

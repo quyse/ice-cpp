@@ -5,12 +5,14 @@ exports.compileCommand = 'cl';
 // http://msdn.microsoft.com/en-us/library/19z1t1wy.aspx
 exports.compileOptions = {
 	all: [ // опции для обоих конфигураций
+	'/nologo', // без тупой строки
 	'/c', // не выполнять линковку
 	'/EHs', // модель исключений: catch перехватывает только C++-исключения
 	'/arch:SSE2', // использовать SSE2
 	'/fp:fast', // быстрая арифметика с плавающей точкой
 	'/GR-', // отключить RTTI
 	'/W3', // уровень предупреждений
+	'/D_CRT_SECURE_NO_WARNINGS', // отключить лишние предупреждения
 	],
 	debug: [ // опции для отладочной конфигурации
 	'/D_DEBUG', // макрос _DEBUG
@@ -35,6 +37,7 @@ exports.linkCommand = 'link';
 // http://msdn.microsoft.com/en-us/library/y0zzbyt4.aspx
 exports.linkOptions = {
 	all: [ // опции для обоих конфигураций
+	'/NOLOGO', // без тупой строки
 	'/INCREMENTAL:NO', // отключить инкрементную линковку
 	'/WX', // считать предупреждения ошибками
 	],
@@ -55,6 +58,7 @@ exports.composeCommand = 'lib';
 // http://msdn.microsoft.com/en-us/library/7ykb2k5f.aspx
 exports.composeOptions = {
 	all: [ // опции для обоих конфигураций
+	'/NOLOGO', // без тупой строки
 	'/WX', // считать предупреждения ошибками
 	],
 	debug: [ // опции для отладочной конфигурации

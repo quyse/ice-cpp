@@ -16,6 +16,11 @@ var srcDir = exports.srcDir = ensureDir(process.env.SRCDIR || baseDir);
 var confDir = exports.confDir = ensureDir(process.env.CONFDIR || (baseDir + configuration));
 var objDir = exports.objDir = ensureDir(process.env.OBJDIR || (confDir + 'obj'));
 
+// дополнительные переменные окружения
+var env = exports.env = process.env;//{};
+//for(var i in process.env)
+//	env[i] = process.env[i];
+
 // платформа, под которую компилируем
 var platform = exports.platform = process.env.PLATFORM || process.platform;
 // модуль платформы
