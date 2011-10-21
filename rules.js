@@ -70,16 +70,26 @@ var getCppHeaderDeps = function(cppFile, file, callback) {
 		if (i < headerQueue.length) {
 			var headerFile = headerQueue[i++];
 
+			// получить путь до файла
+			var a = /^(.*\/)?[^\/]+$/.exec(headerFile);
+			var path = a[1] || '';
+
 			if (resultSet[headerFile] === undefined) {
 				if (headerFile != cppFile)
 					file.dep(config.srcDir + headerFile);
 				resultSet[headerFile] = true;
 
+				// HACK: если путь не пустой, то не добавлять его зависимости
+				if (path != '') {
+					step();
+					return;
+				}
 				getHeaderDeps(headerFile, function(err, files) {
 					if (err)
 						file.error(err);
 					else {
-						headerQueue = headerQueue.concat(files);
+						for ( var i = 0; i < files.length; ++i)
+							headerQueue.push(path + files[i]);
 						step();
 					}
 				});
