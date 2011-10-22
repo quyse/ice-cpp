@@ -20,8 +20,18 @@ exports.compileOptions = {
 	'-D_RELEASE', // макрос _RELEASE
 	]
 };
-exports.setCompileFiles = function(args, cppFile, objectFile) {
-	return args.concat('-o', objectFile, cppFile);
+exports.setCompileOptions = function(args, objectFile, compiler) {
+	args = args.concat();
+	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
+		args.push('-I');
+		args.push(compiler.includeDirs[i]);
+	}
+	for ( var i = 0; i < compiler.macros.length; ++i)
+		args.push('-D' + compiler.macros[i]);
+	args.push('-o');
+	args.push(objectFile);
+	args.push(compiler.sourceFile);
+	return args;
 };
 exports.objectExt = '.o';
 
@@ -39,8 +49,10 @@ exports.linkOptions = {
 	'-s', // удалить всю отладочную информацию
 	]
 };
-exports.setLinkFiles = function(args, objectFiles, targetFile) {
-	return args.concat(objectFiles, '-o', targetFile);
+exports.setLinkOptions = function(args, executableFile, linker) {
+	return args.concat(linker.objectFiles, linker.dynamicLibraries.map(function(v) {
+		return '-l' + v;
+	}), linker.staticLibraries, '-o', targetFile);
 };
 exports.executableExt = '';
 
@@ -54,23 +66,7 @@ exports.composeOptions = {
 	release: [ // опции для релизной конфигурации
 	]
 };
-exports.setComposeFiles = function(args, objectFiles, targetFile) {
-	return args.concat(targetFile, objectFiles);
+exports.setComposeOptions = function(args, libraryFile, composer) {
+	return args.concat(libraryFile, composer.objectFiles);
 };
 var libraryExt = exports.libraryExt = '.a';
-
-exports.addMacro = function(args, macro) {
-	return args.concat('-D' + macro);
-};
-
-exports.addIncludeDir = function(args, dir) {
-	return args.concat('-I', dir);
-};
-
-exports.addDynamicLibrary = function(args, library) {
-	return args.concat('-l' + library);
-};
-
-exports.addStaticLibrary = function(args, library) {
-	return args.concat(library + libraryExt);
-};

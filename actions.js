@@ -2,9 +2,76 @@ var config = require('./config');
 var child_process = require('child_process');
 var invoking = require('./invoking');
 
-/** запустить процесс
+// вспомогательная функция для перевода массива имён из относительных в полные
+var toFull = function(arr, configurator, ext) {
+	for ( var i = 0; i < arr.length; ++i)
+		arr[i] = configurator.relativeToFull(arr[i]) + ext;
+};
+
+/**
+ * Объект-компилятор. Служит для настройки компиляции объектных файлов. Для
+ * настройки необходимо вызвать по крайней мере setSourceFile.
  */
-var launchProcess = function(command, args, callback) {
+var Compiler = exports.Compiler = function() {
+	this.sourceFile = null;
+	this.macros = [];
+	this.includeDirs = [];
+};
+Compiler.prototype.setSourceFile = function(sourceFile) {
+	this.sourceFile = sourceFile;
+};
+Compiler.prototype.addMacro = function(macro) {
+	this.macros.push(macro);
+};
+Compiler.prototype.addIncludeDir = function(dir) {
+	this.includeDirs.push(dir);
+};
+Compiler.prototype.toFull = function(configurator) {
+	this.sourceFile = configurator.relativeToFull(this.sourceFile) + config.sourceExt;
+};
+
+/**
+ * Объект-линкер. Служит для настройки компоновки исполняемых файлов. Необходимо
+ * вызвать по крайней мере addObjectFile (один или несколько раз).
+ */
+var Linker = exports.Linker = function() {
+	this.objectFiles = [];
+	this.dynamicLibraries = [];
+	this.staticLibraries = [];
+};
+Linker.prototype.addObjectFile = function(objectFile) {
+	this.objectFiles.push(objectFile);
+};
+Linker.prototype.addDynamicLibrary = function(library) {
+	this.dynamicLibraries.push(library);
+};
+Linker.prototype.addStaticLibrary = function(library) {
+	this.staticLibraries.push(library);
+};
+Linker.prototype.toFull = function(configurator) {
+	toFull(this.objectFiles, configurator, config.objectExt);
+	toFull(this.dynamicLibraries, configurator, config.libraryExt);
+	toFull(this.staticLibraries, configurator, config.libraryExt);
+};
+
+/**
+ * Объект-компоновщик библиотек. Служит для настройки компоновки библиотек.
+ * Необходимо вызвать по крайней мере addObjectFile (один или несколько раз).
+ */
+var Composer = exports.Composer = function() {
+	this.objectFiles = [];
+};
+Composer.prototype.addObjectFile = function(objectFile) {
+	this.objectFiles.push(objectFile);
+};
+Composer.prototype.toFull = function(configurator) {
+	toFull(this.objectFiles, configurator, config.objectExt);
+};
+
+/**
+ * запустить процесс
+ */
+var launchProcess = exports.launchProcess = function(command, args, callback) {
 	invoking.invoke(function(end) {
 		var childProcess = child_process.spawn(command, args, {
 			env: config.env
@@ -23,30 +90,4 @@ var launchProcess = function(command, args, callback) {
 			end();
 		});
 	});
-};
-
-/** Скомпилировать объектный файл.
- */
-exports.compile = function(cppFile, objectFile, callback) {
-	var args = config.compileOptions;
-	args = config.platformModule.setCompileFiles(args, cppFile, objectFile);
-
-	launchProcess(config.platformModule.compileCommand, args, callback);
-};
-
-/** Слинковать исполняемый файл.
- */
-exports.link = function(objectFiles, targetFile, callback) {
-	var args = config.linkOptions;
-	args = config.platformModule.setLinkFiles(args, objectFiles, targetFile);
-	args = args.concat(config.linkStaticLibraries);
-
-	launchProcess(config.platformModule.linkCommand, args, callback);
-};
-
-exports.compose = function(objectFiles, targetFile, callback) {
-	var args = config.composeOptions;
-	args = config.platformModule.setComposeFiles(args, objectFiles, targetFile);
-
-	launchProcess(config.platformModule.composeCommand, args, callback);
 };

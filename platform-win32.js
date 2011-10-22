@@ -28,8 +28,17 @@ exports.compileOptions = {
 	'/Gy', // function-level linking
 	]
 };
-exports.setCompileFiles = function(args, cppFile, objectFile) {
-	return args.concat('/Fo' + objectFile, cppFile);
+exports.setCompileOptions = function(args, objectFile, compiler) {
+	args = args.concat();
+	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
+		args.push('/I');
+		args.push(compiler.includeDirs[i]);
+	}
+	for ( var i = 0; i < compiler.macros.length; ++i)
+		args.push('/D' + compiler.macros[i]);
+	args.push('/Fo' + objectFile);
+	args.push(compiler.sourceFile);
+	return args;
 };
 exports.objectExt = '.obj';
 
@@ -49,8 +58,8 @@ exports.linkOptions = {
 	'/OPT:REF', // удалять неиспользуемые функции
 	]
 };
-exports.setLinkFiles = function(args, objectFiles, targetFile) {
-	return args.concat('/OUT:' + targetFile, objectFiles);
+exports.setLinkOptions = function(args, executableFile, linker) {
+	return args.concat('/OUT:' + executableFile, linker.objectFiles, linker.dynamicLibraries, linker.staticLibraries);
 };
 exports.executableExt = '.exe';
 
@@ -67,15 +76,7 @@ exports.composeOptions = {
 	'/LCTG', // whole program optimization
 	]
 };
-exports.setComposeFiles = function(args, objectFiles, targetFile) {
-	return args.concat('/OUT:' + targetFile, objectFiles);
+exports.setComposeOptions = function(args, libraryFile, composer) {
+	return args.concat('/OUT:' + libraryFile, composer.objectFiles);
 };
 exports.libraryExt = '.lib';
-
-exports.addMacro = function(args, macro) {
-	return args.concat('/D' + macro);
-};
-
-exports.addIncludeDir = function(args, dir) {
-	return args.concat('/I', dir);
-};
