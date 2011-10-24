@@ -123,12 +123,10 @@ ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.executableExt) + '$'
 
 	var configurator = Configurator.getForFile(executableFile);
 	var linker = new actions.Linker();
-	configurator.configurator.configureLinker(executableFile, linker);
+	configurator.configurator.configureLinker(configurator.fullToRelative(executableFile), linker);
 	linker.toFull(configurator);
 	for ( var i = 0; i < linker.objectFiles.length; ++i)
 		file.dep(linker.objectFiles[i]);
-	for ( var i = 0; i < linker.dynamicLibraries.length; ++i)
-		file.dep(linker.dynamicLibraries[i]);
 	for ( var i = 0; i < linker.staticLibraries.length; ++i)
 		file.dep(linker.staticLibraries[i]);
 	file.waitDeps(function() {
@@ -151,7 +149,7 @@ ice.rule(new RegExp('^(.*)' + ice.utils.regexpEscape(config.libraryExt) + '$'), 
 
 	var configurator = Configurator.getForFile(libraryFile);
 	var composer = new actions.Composer();
-	configurator.configurator.configureComposer(libraryFile, composer);
+	configurator.configurator.configureComposer(configurator.fullToRelative(libraryFile), composer);
 	composer.toFull(configurator);
 	for ( var i = 0; i < composer.objectFiles.length; ++i)
 		file.dep(composer.objectFiles[i]);
