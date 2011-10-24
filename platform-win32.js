@@ -18,7 +18,7 @@ exports.compileOptions = {
 	'/D_DEBUG', // макрос _DEBUG
 	'/Od', // без оптимизации
 	'/MDd', // стандартная библиотека C/C++ - Multithreaded Debug DLL
-	'/Zi', // отладочная информация в pdb, без Edit&Continue
+	'/Z7', // отладочная информация в obj, без Edit&Continue
 	],
 	release: [ // опции для релизной конфигурации
 	'/D_RELEASE', // макрос _RELEASE
