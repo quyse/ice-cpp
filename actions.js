@@ -27,7 +27,8 @@ Compiler.prototype.addIncludeDir = function(dir) {
 	this.includeDirs.push(dir);
 };
 Compiler.prototype.toFull = function(configurator) {
-	this.sourceFile = configurator.relativeToFull(this.sourceFile) + config.sourceExt;
+	this.sourceFile = configurator.relativeToFull(this.sourceFile);
+	toFull(this.includeDirs, configurator, '');
 };
 
 /**
@@ -50,7 +51,6 @@ Linker.prototype.addStaticLibrary = function(library) {
 };
 Linker.prototype.toFull = function(configurator) {
 	toFull(this.objectFiles, configurator, config.objectExt);
-	toFull(this.dynamicLibraries, configurator, config.libraryExt);
 	toFull(this.staticLibraries, configurator, config.libraryExt);
 };
 

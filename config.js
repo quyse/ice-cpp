@@ -20,8 +20,6 @@ var platform = exports.platform = process.env.PLATFORM || process.platform;
 // модуль платформы
 var platformModule = exports.platformModule = require('./platform-' + platform);
 
-exports.sourceExt = '.cpp';
-
 /**
  * получение опций в зависимости от конфигурации
  */
