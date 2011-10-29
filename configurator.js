@@ -29,7 +29,7 @@ Configurator.getForDir = function(dirName) {
 	var configurator = null;
 	try {
 		var configuratorName = process.cwd() + '/' + dirName + 'configure.js';
-		console.log('trying configurator: ' + configuratorName);
+		// console.log('trying configurator: ' + configuratorName);
 		configurator = new Configurator(dirName, require(configuratorName));
 	} catch (e) {
 		// конфигуратор не найден, попробовать найти его в родительском каталоге
