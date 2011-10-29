@@ -20,38 +20,56 @@ var addEnv = exports.addEnv = function(env) {
 		config.env[i] = env[i];
 };
 
+// список целей
+var targets = [];
+
+// обработать аргументы
+// аргументы, начинающиеся на дефис - параметры
 var args = process.argv.slice(2);
-if (args.length < 1)
-	throw new Error('not enough arguments');
-// если задан файл с переменными окружения
-if (args[1])
-	addEnvFile(args[1]);
-
-// цель компиляции
-// если вида type:file, то добавить расширение, соответствующее типу цели
-var target = args[0];
-
-var a = /^([^\:]+)\:(.+)$/.exec(target);
-if (a) {
-	target = a[2];
-	switch (a[1]) {
-	case 'exe':
-	case 'executable':
-		target += config.executableExt;
-		break;
-	case 'a':
-	case 'lib':
-	case 'library':
-		target += config.libraryExt;
-		break;
-	case 'o':
-	case 'obj':
-	case 'object':
-		target += config.objectExt;
-		break;
-	default:
-		throw new Error('Invalid target type: ' + a[1]);
+for ( var i = 0; i < args.length; ++i) {
+	var arg = args[i];
+	// если параметр
+	if (arg.length > 0 && arg[0] == '-') {
+		switch (arg) {
+		case '-env':
+			if (++i >= args.length)
+				throw new Error('env file not specified for -env');
+			addEnvFile(args[i]);
+			break;
+		default:
+			throw new Error('unknown option: ' + arg);
+		}
+	}
+	// иначе цель
+	else {
+		// если вида type:file, то добавить расширение, соответствующее типу цели
+		var target = arg;
+		var a = /^([^\:]+)\:(.+)$/.exec(target);
+		if (a) {
+			target = a[2];
+			switch (a[1]) {
+			case 'exe':
+			case 'executable':
+				target += config.executableExt;
+				break;
+			case 'a':
+			case 'lib':
+			case 'library':
+				target += config.libraryExt;
+				break;
+			case 'o':
+			case 'obj':
+			case 'object':
+				target += config.objectExt;
+				break;
+			default:
+				throw new Error('invalid target type: ' + a[1]);
+			}
+		}
+		targets.push(target);
 	}
 }
 
-ice.make(target);
+// запустить компиляцию целей
+for ( var i = 0; i < targets.length; ++i)
+	ice.make(targets[i]);
