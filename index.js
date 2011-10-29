@@ -23,7 +23,35 @@ var addEnv = exports.addEnv = function(env) {
 var args = process.argv.slice(2);
 if (args.length < 1)
 	throw new Error('not enough arguments');
+// если задан файл с переменными окружения
 if (args[1])
 	addEnvFile(args[1]);
+
+// цель компиляции
+// если вида type:file, то добавить расширение, соответствующее типу цели
 var target = args[0];
+
+var a = /^([^\:]+)\:(.+)$/.exec(target);
+if (a) {
+	target = a[2];
+	switch (a[1]) {
+	case 'exe':
+	case 'executable':
+		target += config.executableExt;
+		break;
+	case 'a':
+	case 'lib':
+	case 'library':
+		target += config.libraryExt;
+		break;
+	case 'o':
+	case 'obj':
+	case 'object':
+		target += config.objectExt;
+		break;
+	default:
+		throw new Error('Invalid target type: ' + a[1]);
+	}
+}
+
 ice.make(target);
