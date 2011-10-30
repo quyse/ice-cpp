@@ -54,7 +54,7 @@ exports.setLinkOptions = function(args, executableFile, linker) {
 		return '-l' + v;
 	}), linker.staticLibraries, '-o', targetFile);
 };
-exports.executableExt = '';
+exports.executableExt = '.exe';
 
 exports.composeCommand = 'ar';
 exports.composeOptions = {

@@ -3,7 +3,10 @@
   "name": "ice-cpp",
   "description": "ice-cpp build system",
   "version": "0.0.1",
-  "main": "build.js",
+  "main": "index.js",
+  "bin": {
+    "ice-cpp": "./index.js"
+  },
   "dependencies": {
     "ice": ">=0.0"
   }
