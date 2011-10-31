@@ -70,7 +70,7 @@ for ( var i = 0; i < args.length; ++i) {
 		targets.push(target);
 	}
 }
-console.log(targets);
+
 // запустить компиляцию целей
 for ( var i = 0; i < targets.length; ++i)
 	ice.make(targets[i]);
