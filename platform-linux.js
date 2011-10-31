@@ -52,7 +52,7 @@ exports.linkOptions = {
 exports.setLinkOptions = function(args, executableFile, linker) {
 	return args.concat(linker.objectFiles, linker.dynamicLibraries.map(function(v) {
 		return '-l' + v;
-	}), linker.staticLibraries, '-o', targetFile);
+	}), linker.staticLibraries, '-o', executableFile);
 };
 exports.executableExt = '.exe';
 
