@@ -1,8 +1,10 @@
 /* Файл содержит процедуры, специфичные для компиляции под Linux через GCC.
  */
 
+var config = require('./config');
+
 exports.compileCommand = 'g++';
-exports.compileOptions = {
+var compileOptions = {
 	all: [ // опции для обоих конфигураций
 	'-fmessage-length=0', // отключить перенос слишком длинных строк
 	'-Wall', // показывать все (большинство) предупреждений
@@ -20,8 +22,8 @@ exports.compileOptions = {
 	'-D_RELEASE', // макрос _RELEASE
 	]
 };
-exports.setCompileOptions = function(args, objectFile, compiler) {
-	args = args.concat();
+exports.setCompileOptions = function(objectFile, compiler) {
+	var args = config.getOptions(compileOptions, compiler.configuration);
 	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
 		args.push('-I');
 		args.push(compiler.includeDirs[i]);
@@ -37,7 +39,7 @@ exports.objectExt = '.o';
 
 exports.linkCommand = 'g++';
 // http://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Link-Options.html
-exports.linkOptions = {
+var linkOptions = {
 	all: [ // опции для обоих конфигураций
 	'-fmessage-length=0', // отключить перенос слишком длинных строк
 	'-Wall', // показывать большинство ошибок
@@ -49,7 +51,8 @@ exports.linkOptions = {
 	'-s', // удалить всю отладочную информацию
 	]
 };
-exports.setLinkOptions = function(args, executableFile, linker) {
+exports.setLinkOptions = function(executableFile, linker) {
+	var args = config.getOptions(linkOptions, linker.configuration);
 	return args.concat(linker.objectFiles, linker.dynamicLibraries.map(function(v) {
 		return '-l' + v;
 	}), linker.staticLibraries, '-o', executableFile);
@@ -57,7 +60,7 @@ exports.setLinkOptions = function(args, executableFile, linker) {
 exports.executableExt = '.exe';
 
 exports.composeCommand = 'ar';
-exports.composeOptions = {
+var composeOptions = {
 	all: [ // опции для обоих конфигураций
 	'-r', // добавлять файлы с заменой
 	],
@@ -66,7 +69,8 @@ exports.composeOptions = {
 	release: [ // опции для релизной конфигурации
 	]
 };
-exports.setComposeOptions = function(args, libraryFile, composer) {
+exports.setComposeOptions = function(libraryFile, composer) {
+	var args = config.getOptions(composeOptions, composer.configuration);
 	return args.concat(libraryFile, composer.objectFiles);
 };
 var libraryExt = exports.libraryExt = '.a';

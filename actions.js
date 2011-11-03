@@ -13,6 +13,7 @@ var toFull = function(arr, configurator, ext) {
  * настройки необходимо вызвать по крайней мере setSourceFile.
  */
 var Compiler = exports.Compiler = function() {
+	this.configuration = 'debug';
 	this.sourceFile = null;
 	this.macros = [];
 	this.includeDirs = [];
@@ -36,6 +37,7 @@ Compiler.prototype.toFull = function(configurator) {
  * вызвать по крайней мере addObjectFile (один или несколько раз).
  */
 var Linker = exports.Linker = function() {
+	this.configuration = 'debug';
 	this.objectFiles = [];
 	this.dynamicLibraries = [];
 	this.staticLibraries = [];
@@ -59,6 +61,7 @@ Linker.prototype.toFull = function(configurator) {
  * Необходимо вызвать по крайней мере addObjectFile (один или несколько раз).
  */
 var Composer = exports.Composer = function() {
+	this.configuration = 'debug';
 	this.objectFiles = [];
 };
 Composer.prototype.addObjectFile = function(objectFile) {

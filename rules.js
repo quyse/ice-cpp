@@ -101,8 +101,7 @@ ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.objectExt) + '$'), f
 	file.waitDeps(function() {
 		getCppHeaderDeps(compiler.sourceFile, file, function() {
 			file.waitDeps(function() {
-				var args = config.compileOptions;
-				args = config.platformModule.setCompileOptions(args, objectFile + config.objectExt, compiler);
+				var args = config.platformModule.setCompileOptions(objectFile + config.objectExt, compiler);
 
 				actions.launchProcess(config.platformModule.compileCommand, args, function(err) {
 					if (err)
@@ -130,8 +129,7 @@ ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.executableExt) + '$'
 	for ( var i = 0; i < linker.staticLibraries.length; ++i)
 		file.dep(linker.staticLibraries[i]);
 	file.waitDeps(function() {
-		var args = config.linkOptions;
-		args = config.platformModule.setLinkOptions(args, executableFile + config.executableExt, linker);
+		var args = config.platformModule.setLinkOptions(executableFile + config.executableExt, linker);
 
 		actions.launchProcess(config.platformModule.linkCommand, args, function(err) {
 			if (err)
@@ -154,8 +152,7 @@ ice.rule(new RegExp('^(.*)' + ice.utils.regexpEscape(config.libraryExt) + '$'), 
 	for ( var i = 0; i < composer.objectFiles.length; ++i)
 		file.dep(composer.objectFiles[i]);
 	file.waitDeps(function() {
-		var args = config.composeOptions;
-		args = config.platformModule.setComposeOptions(args, libraryFile + config.libraryExt, composer);
+		var args = config.platformModule.setComposeOptions(libraryFile + config.libraryExt, composer);
 
 		actions.launchProcess(config.platformModule.composeCommand, args, function(err) {
 			if (err)

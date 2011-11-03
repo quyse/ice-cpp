@@ -1,8 +1,6 @@
 /* Скрипт, конфигурирующий компиляцию.
  */
 
-var configuration = exports.configuration = process.env.CONF || 'debug';
-
 /**
  * добавить завершающий /, если нет
  */
@@ -23,20 +21,14 @@ var platformModule = exports.platformModule = require('./platform-' + platform);
 /**
  * получение опций в зависимости от конфигурации
  */
-var getOptions = function(options) {
+var getOptions = exports.getOptions = function(options, configuration) {
 	return options.all.concat(options[configuration]);
 };
 
-var compileOptions = getOptions(platformModule.compileOptions);
-exports.compileOptions = compileOptions;
 exports.objectExt = platformModule.objectExt;
 
-var linkOptions = getOptions(platformModule.linkOptions);
-exports.linkOptions = linkOptions;
 exports.executableExt = platformModule.executableExt;
 
-var composeOptions = getOptions(platformModule.composeOptions);
-exports.composeOptions = composeOptions;
 exports.libraryExt = platformModule.libraryExt;
 
 exports.maxRunningProcesses = 2;

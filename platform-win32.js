@@ -1,9 +1,11 @@
 /* Файл содержит процедуры, специфичные для компиляции под Windows через MS C++ Compiler 2010.
  */
 
+var config = require('./config');
+
 exports.compileCommand = 'cl';
 // http://msdn.microsoft.com/en-us/library/19z1t1wy.aspx
-exports.compileOptions = {
+var compileOptions = {
 	all: [ // опции для обоих конфигураций
 	'/nologo', // без тупой строки
 	'/c', // не выполнять линковку
@@ -28,8 +30,8 @@ exports.compileOptions = {
 	'/Gy', // function-level linking
 	]
 };
-exports.setCompileOptions = function(args, objectFile, compiler) {
-	args = args.concat();
+exports.setCompileOptions = function(objectFile, compiler) {
+	var args = config.getOptions(compileOptions, compiler.configuration);
 	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
 		args.push('/I');
 		args.push(compiler.includeDirs[i]);
@@ -44,7 +46,7 @@ exports.objectExt = '.obj';
 
 exports.linkCommand = 'link';
 // http://msdn.microsoft.com/en-us/library/y0zzbyt4.aspx
-exports.linkOptions = {
+var linkOptions = {
 	all: [ // опции для обоих конфигураций
 	'/NOLOGO', // без тупой строки
 	'/INCREMENTAL:NO', // отключить инкрементную линковку
@@ -54,18 +56,19 @@ exports.linkOptions = {
 	'/DEBUG', // включить отладочную информацию
 	],
 	release: [ // опции для релизной конфигурации
-	'/LCTG', // whole program optimization
+	'/LTCG', // whole program optimization
 	'/OPT:REF', // удалять неиспользуемые функции
 	]
 };
-exports.setLinkOptions = function(args, executableFile, linker) {
+exports.setLinkOptions = function(executableFile, linker) {
+	var args = config.getOptions(linkOptions, linker.configuration);
 	return args.concat('/OUT:' + executableFile, linker.objectFiles, linker.dynamicLibraries, linker.staticLibraries);
 };
 exports.executableExt = '.exe';
 
 exports.composeCommand = 'lib';
 // http://msdn.microsoft.com/en-us/library/7ykb2k5f.aspx
-exports.composeOptions = {
+var composeOptions = {
 	all: [ // опции для обоих конфигураций
 	'/NOLOGO', // без тупой строки
 	'/WX', // считать предупреждения ошибками
@@ -76,7 +79,8 @@ exports.composeOptions = {
 	'/LCTG', // whole program optimization
 	]
 };
-exports.setComposeOptions = function(args, libraryFile, composer) {
+exports.setComposeOptions = function(libraryFile, composer) {
+	var args = config.getOptions(composeOptions, composer.configuration);
 	return args.concat('/OUT:' + libraryFile, composer.objectFiles);
 };
 exports.libraryExt = '.lib';
