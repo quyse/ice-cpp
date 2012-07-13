@@ -17,6 +17,7 @@ var Compiler = exports.Compiler = function() {
 	this.sourceFile = null;
 	this.macros = [];
 	this.includeDirs = [];
+	this.cppMode = true;
 };
 Compiler.prototype.setSourceFile = function(sourceFile) {
 	this.sourceFile = sourceFile;

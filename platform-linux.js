@@ -3,7 +3,7 @@
 
 var config = require('./config');
 
-exports.compileCommand = 'g++';
+exports.compileCommand = 'gcc';
 var compileOptions = {
 	all: [ // опции для обоих конфигураций
 	'-fmessage-length=0', // отключить перенос слишком длинных строк
@@ -11,7 +11,6 @@ var compileOptions = {
 	'-Werror', // превращать предупреждения в ошибки
 	'-c', // не выполнять линковку
 	'-ffast-math', // быстрая арифметика с плавающей точкой
-	'-std=c++0x', // C++ 0x
 	],
 	debug: [ // опции для отладочной конфигурации
 	'-O0', // без оптимизации
@@ -25,6 +24,8 @@ var compileOptions = {
 };
 exports.setCompileOptions = function(objectFile, compiler) {
 	var args = config.getOptions(compileOptions, compiler.configuration);
+	if(compiler.cppMode)
+		args.push('-std=c++0x'); // C++ 0x
 	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
 		args.push('-I');
 		args.push(compiler.includeDirs[i]);
