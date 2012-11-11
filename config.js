@@ -15,6 +15,8 @@ var env = exports.env = process.env;
 
 // платформа, под которую компилируем
 var platform = exports.platform = process.env.PLATFORM || process.platform;
+// компилятор, которым компилируем (undefined - компилятор по умолчанию)
+var toolchain = exports.toolchain = process.env.TOOLCHAIN;
 // модуль платформы
 var platformModule = exports.platformModule = require('./platform-' + platform);
 

@@ -3,6 +3,8 @@
 
 var config = require('./config');
 
+var toolchain = config.toolchain = config.toolchain || 'msvc';
+
 exports.compileCommand = 'cl';
 // http://msdn.microsoft.com/en-us/library/19z1t1wy.aspx
 var compileOptions = {
