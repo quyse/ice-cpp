@@ -1,0 +1,15 @@
+ice-cpp - cross-platform utility to build C++ software.
+
+Installation instructions (Windows):
+
+* Install node.js binary from http://nodejs.org/.
+* Install some C++ compiler. Utility can use Microsoft compiler from Windows SDK 7.1, or from Visual Studio.
+* Ensure that you have an ice module in node_modules directory.
+* Launch the Windows SDK Command Prompt, or Visual Studio Command Prompt, and perform following command to get environment file:
+set > C:\envfile
+(Of course, you can use another file name).
+* Inspect the contents of your envfile, maybe you should add or remove something (i.e. additional include directories in INCLUDE variable)
+* Create a text file ice-cpp.bat in somewhere your PATH environment variable points to, with following line in it:
+@node path-to-your-ice-cpp-directory\index.js -env path-to-your-envfile %*
+* That's all. Now you can build software from directory there is configure.js file in, simply running something like
+ice-cpp exe:debug/app
