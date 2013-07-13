@@ -19,6 +19,7 @@ var Compiler = exports.Compiler = function() {
 	this.includeDirs = [];
 	this.cppMode = true;
 };
+Compiler.prototype.platform = config.platform;
 Compiler.prototype.setSourceFile = function(sourceFile) {
 	this.sourceFile = sourceFile;
 };
@@ -43,6 +44,7 @@ var Linker = exports.Linker = function() {
 	this.dynamicLibraries = [];
 	this.staticLibraries = [];
 };
+Linker.prototype.platform = config.platform;
 Linker.prototype.addObjectFile = function(objectFile) {
 	this.objectFiles.push(objectFile);
 };
@@ -65,6 +67,7 @@ var Composer = exports.Composer = function() {
 	this.configuration = 'debug';
 	this.objectFiles = [];
 };
+Composer.prototype.platform = config.platform;
 Composer.prototype.addObjectFile = function(objectFile) {
 	this.objectFiles.push(objectFile);
 };
