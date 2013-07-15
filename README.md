@@ -6,6 +6,8 @@
 mkdir node_modules
 cd node_modules
 ln -s <path-to-ice-directory> ice
+cd /usr/bin
+sudo ln -s <path-to-ice-cpp-directory>/index.js ice-cpp
 ```
 
 ## Using
