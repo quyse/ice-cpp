@@ -111,9 +111,9 @@ default:
 }
 exports.setLinkOptions = function(executableFile, linker) {
 	var args = config.getOptions(linkOptions, linker.configuration);
-	return args.concat(linker.objectFiles, linker.dynamicLibraries.map(function(v) {
+	return args.concat(linker.objectFiles, linker.staticLibraries, linker.dynamicLibraries.map(function(v) {
 		return '-l' + v;
-	}), linker.staticLibraries, '-o', executableFile);
+	}), '-o', executableFile);
 };
 exports.executableExt = '.exe';
 
