@@ -36,7 +36,6 @@ case 'clang':
 		all: [ // опции для обоих конфигураций
 		'-fmessage-length=0', // отключить перенос слишком длинных строк
 		'-Wall', // показывать все (большинство) предупреждений
-		'-Werror', // превращать предупреждения в ошибки
 		'-c', // не выполнять линковку
 		'-ffast-math', // быстрая арифметика с плавающей точкой
 		'-Wno-address-of-temporary', // разрешить брать адрес от временных объектов
@@ -68,6 +67,10 @@ exports.setCompileOptions = function(objectFile, compiler) {
 	args.push('-o');
 	args.push(objectFile);
 	args.push(compiler.sourceFile);
+
+	if(compiler.strict)
+		args.push('-Werror'); // превращать предупреждения в ошибки
+
 	return args;
 };
 exports.objectExt = '.o';

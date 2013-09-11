@@ -18,6 +18,7 @@ var Compiler = exports.Compiler = function() {
 	this.macros = [];
 	this.includeDirs = [];
 	this.cppMode = true;
+	this.strict = true;
 };
 Compiler.prototype.platform = config.platform;
 Compiler.prototype.setSourceFile = function(sourceFile) {

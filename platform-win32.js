@@ -15,7 +15,6 @@ var compileOptions = {
 	'/arch:SSE2', // использовать SSE2
 	'/fp:fast', // быстрая арифметика с плавающей точкой
 	'/W3', // уровень предупреждений
-	'/WX', // считать все предупреждения ошибками
 	'/D_CRT_SECURE_NO_WARNINGS', // отключить лишние предупреждения
 	],
 	debug: [ // опции для отладочной конфигурации
@@ -42,6 +41,10 @@ exports.setCompileOptions = function(objectFile, compiler) {
 		args.push('/D' + compiler.macros[i]);
 	args.push('/Fo' + objectFile);
 	args.push(compiler.sourceFile);
+
+	if(compiler.strict)
+		args.push('/WX'); // считать все предупреждения ошибками
+
 	return args;
 };
 exports.objectExt = '.obj';
