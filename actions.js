@@ -67,6 +67,7 @@ Linker.prototype.toFull = function(configurator) {
 var Composer = exports.Composer = function() {
 	this.configuration = 'debug';
 	this.objectFiles = [];
+	this.skip = false;
 };
 Composer.prototype.platform = config.platform;
 Composer.prototype.addObjectFile = function(objectFile) {

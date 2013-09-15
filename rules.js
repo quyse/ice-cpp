@@ -148,6 +148,10 @@ ice.rule(new RegExp('^(.*)' + ice.utils.regexpEscape(config.libraryExt) + '$'), 
 	var configurator = Configurator.getForFile(libraryFile);
 	var composer = new actions.Composer();
 	configurator.configurator.configureComposer(configurator.fullToRelative(libraryFile), composer);
+	if(composer.skip) {
+		file.ok();
+		return;
+	}
 	composer.toFull(configurator);
 	for ( var i = 0; i < composer.objectFiles.length; ++i)
 		file.dep(composer.objectFiles[i]);
