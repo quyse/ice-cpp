@@ -149,7 +149,7 @@ ice.rule(new RegExp('^(.*)' + ice.utils.regexpEscape(config.libraryExt) + '$'), 
 	var composer = new actions.Composer();
 	configurator.configurator.configureComposer(configurator.fullToRelative(libraryFile), composer);
 	if(composer.skip) {
-		file.ok();
+		file.ok(true);
 		return;
 	}
 	composer.toFull(configurator);
