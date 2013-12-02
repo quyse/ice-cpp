@@ -19,16 +19,19 @@ case 'emcc':
 		'-Wall', // показывать все (большинство) предупреждений
 		'-c', // не выполнять линковку
 		'-ffast-math', // быстрая арифметика с плавающей точкой
+		'-s', 'DOUBLE_MODE=0', // no reads of unaligned doubles
+		'-s', 'PRECISE_I64_MATH=0',
+		'-s', 'QUANTUM_SIZE=1',
 		],
 		debug: [ // опции для отладочной конфигурации
 		'-O0', // без оптимизации
 		'-D_DEBUG', // макрос _DEBUG
 		'-g', // debug info
-		'-s',
-		'EXCEPTION_DEBUG=1',
+		'-s', 'EXCEPTION_DEBUG=1',
 		],
 		release: [ // опции для релизной конфигурации
 		'-O2', // полная оптимизация
+		'--llvm-lto', '1', // link-time optimization
 		'-D_RELEASE', // макрос _RELEASE
 		]
 	};
@@ -74,6 +77,7 @@ case 'emcc':
 		],
 		release: [ // опции для релизной конфигурации
 		'-O2', // оптимизация
+		'--llvm-lto', '1', // link-time optimization
 		'-s', // удалить всю отладочную информацию
 		]
 	};
