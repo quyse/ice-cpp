@@ -44,6 +44,7 @@ var Linker = exports.Linker = function() {
 	this.objectFiles = [];
 	this.dynamicLibraries = [];
 	this.staticLibraries = [];
+	this.resFiles = [];
 };
 Linker.prototype.platform = config.platform;
 Linker.prototype.addObjectFile = function(objectFile) {
@@ -58,6 +59,9 @@ Linker.prototype.addStaticLibrary = function(library) {
 Linker.prototype.toFull = function(configurator) {
 	toFull(this.objectFiles, configurator, config.objectExt);
 	toFull(this.staticLibraries, configurator, config.libraryExt);
+	toFull(this.resFiles, configurator, '');
+	if(this.defFile)
+		this.defFile = configurator.relativeToFull(this.defFile);
 };
 
 /**

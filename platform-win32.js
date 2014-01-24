@@ -16,6 +16,7 @@ var compileOptions = {
 	'/fp:fast', // быстрая арифметика с плавающей точкой
 	'/W3', // уровень предупреждений
 	'/D_CRT_SECURE_NO_WARNINGS', // отключить лишние предупреждения
+	'/D_SCL_SECURE_NO_WARNINGS', // отключить лишние предупреждения
 	],
 	debug: [ // опции для отладочной конфигурации
 	'/D_DEBUG', // макрос _DEBUG
@@ -67,9 +68,14 @@ var linkOptions = {
 };
 exports.setLinkOptions = function(executableFile, linker) {
 	var args = config.getOptions(linkOptions, linker.configuration);
-	return args.concat('/OUT:' + executableFile, linker.objectFiles, linker.dynamicLibraries, linker.staticLibraries);
+	if(linker.dll)
+		args.push('/DLL');
+	if(linker.defFile)
+		args.push('/DEF:' + linker.defFile);
+	return args.concat('/OUT:' + executableFile, linker.objectFiles, linker.dynamicLibraries, linker.staticLibraries, linker.resFiles);
 };
 exports.executableExt = '.exe';
+exports.dllExt = '.dll';
 
 exports.composeCommand = 'lib';
 // http://msdn.microsoft.com/en-us/library/7ykb2k5f.aspx

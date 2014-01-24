@@ -119,6 +119,7 @@ exports.setLinkOptions = function(executableFile, linker) {
 	}), '-o', executableFile);
 };
 exports.executableExt = '.exe';
+exports.dllExt = '.so';
 
 exports.composeCommand = 'ar';
 var composeOptions = {

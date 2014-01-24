@@ -115,21 +115,26 @@ ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.objectExt) + '$'), f
 
 });
 
-// правило для исполняемых файлов
-ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.executableExt) + '$'), function(a, file) {
+// правило для исполняемых файлов и DLL
+ice.rule(new RegExp('^(.+)(' + ice.utils.regexpEscape(config.executableExt) + '|' + ice.utils.regexpEscape(config.dllExt) + ')$'), function(a, file) {
 	// имя исполняемого файла без расширения
 	var executableFile = a[1];
 
 	var configurator = Configurator.getForFile(executableFile);
 	var linker = new actions.Linker();
+	linker.dll = (a[2] == config.dllExt);
 	configurator.configurator.configureLinker(configurator.fullToRelative(executableFile), linker);
 	linker.toFull(configurator);
 	for ( var i = 0; i < linker.objectFiles.length; ++i)
 		file.dep(linker.objectFiles[i]);
 	for ( var i = 0; i < linker.staticLibraries.length; ++i)
 		file.dep(linker.staticLibraries[i]);
+	for ( var i = 0; i < linker.resFiles.length; ++i)
+		file.dep(linker.resFiles[i]);
+	if(linker.defFile)
+		file.dep(linker.defFile);
 	file.waitDeps(function() {
-		var args = config.platformModule.setLinkOptions(executableFile + config.executableExt, linker);
+		var args = config.platformModule.setLinkOptions(a[0], linker);
 
 		actions.launchProcess(config.platformModule.linkCommand, args, function(err) {
 			if (err)

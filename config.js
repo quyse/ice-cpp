@@ -73,9 +73,8 @@ var getOptions = exports.getOptions = function(options, configuration) {
 };
 
 exports.objectExt = platformModule.objectExt;
-
 exports.executableExt = platformModule.executableExt;
-
+exports.dllExt = platformModule.dllExt;
 exports.libraryExt = platformModule.libraryExt;
 
 exports.maxRunningProcesses = 4;
@@ -91,6 +90,10 @@ for(var i = 0; i < targets.length; ++i) {
 		case 'exe':
 		case 'executable':
 			target += exports.executableExt;
+			break;
+		case 'dll':
+		case 'so':
+			target += exports.dllExt;
 			break;
 		case 'a':
 		case 'lib':

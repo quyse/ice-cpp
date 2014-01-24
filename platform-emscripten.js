@@ -92,6 +92,7 @@ exports.setLinkOptions = function(executableFile, linker) {
 	}), '-o', executableFile);
 };
 exports.executableExt = '.js';
+exports.dllExt = '.js';
 
 exports.composeCommand = emccCommand; // link instead of archiving, according to recommendations
 var composeOptions = {
