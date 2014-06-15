@@ -114,9 +114,14 @@ default:
 }
 exports.setLinkOptions = function(executableFile, linker) {
 	var args = config.getOptions(linkOptions, linker.configuration);
-	return args.concat(linker.objectFiles, linker.staticLibraries, linker.dynamicLibraries.map(function(v) {
+	args = args.concat(linker.objectFiles, linker.staticLibraries, linker.dynamicLibraries.map(function(v) {
 		return '-l' + v;
-	}), '-o', executableFile);
+	}));
+	if(linker.dll)
+		args.push('-shared')
+	args.push('-o');
+	args.push(executableFile);
+	return args;
 };
 exports.executableExt = '.exe';
 exports.dllExt = '.so';
