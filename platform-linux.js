@@ -57,8 +57,11 @@ default:
 }
 exports.setCompileOptions = function(objectFile, compiler) {
 	var args = config.getOptions(compileOptions, compiler.configuration);
-	if(compiler.cppMode)
+	if(compiler.cppMode) {
 		args.push(toolchain == 'clang' ? '-std=c++11' : '-std=c++0x'); // C++ 11
+		args.push('-fvisibility=hidden'); // hide symbols which not explicitly visible
+		args.push('-fvisibility-inlines-hidden'); // hide inline symbols
+	}
 	for ( var i = 0; i < compiler.includeDirs.length; ++i) {
 		args.push('-I');
 		args.push(compiler.includeDirs[i]);
