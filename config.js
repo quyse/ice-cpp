@@ -2,6 +2,7 @@
  */
 
 var fs = require('fs');
+var os = require('os');
 
 /**
  * добавить завершающий /, если нет
@@ -19,6 +20,8 @@ exports.env = process.env;
 exports.platform = process.env.PLATFORM || process.platform;
 // компилятор, которым компилируем (undefined - компилятор по умолчанию)
 exports.toolchain = process.env.TOOLCHAIN;
+// целевая архитектура
+exports.arch = process.env.ARCH || process.arch;
 
 var addEnvFile = function(envFile) {
 	var data = fs.readFileSync(envFile, 'utf8');
@@ -76,8 +79,10 @@ exports.objectExt = platformModule.objectExt;
 exports.executableExt = platformModule.executableExt;
 exports.dllExt = platformModule.dllExt;
 exports.libraryExt = platformModule.libraryExt;
+exports.rcExt = platformModule.rcExt;
+exports.resExt = platformModule.resExt;
 
-exports.maxRunningProcesses = 4;
+exports.maxRunningProcesses = os.cpus().length;
 
 // обработать таргеты
 for(var i = 0; i < targets.length; ++i) {

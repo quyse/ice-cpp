@@ -31,6 +31,7 @@ var compileOptions = {
 	'/MT', // стандартная библиотека C/C++ - Multithreaded Static
 	'/GL', // whole program optimization
 	'/Gy', // function-level linking
+	'/Z7', // отладочная информация в obj, без Edit&Continue, для сервера крашей
 	]
 };
 exports.setCompileOptions = function(objectFile, compiler) {
@@ -63,6 +64,7 @@ var linkOptions = {
 	'/DEBUG', // включить отладочную информацию
 	],
 	release: [ // опции для релизной конфигурации
+	'/DEBUG', // включить отладочную информацию (для сервера крашей)
 	'/LTCG', // whole program optimization
 	'/OPT:REF', // удалять неиспользуемые функции
 	]
@@ -96,3 +98,20 @@ exports.setComposeOptions = function(libraryFile, composer) {
 	return args.concat('/OUT:' + libraryFile, composer.objectFiles);
 };
 exports.libraryExt = '.lib';
+
+exports.compileResourceCommand = 'rc';
+// https://msdn.microsoft.com/en-us/library/windows/desktop/aa381055
+var compileResourceOptions = {
+	all: [ // опции для обоих конфигураций
+	],
+	debug: [ // опции для отладочной конфигурации
+	],
+	release: [ // опции для релизной конфигурации
+	]
+};
+exports.setResourceOptions = function(resourceFile, resourcer) {
+	var args = config.getOptions(compileResourceOptions, resourcer.configuration);
+	return args.concat('/fo', resourceFile, resourcer.resourceFile);
+};
+exports.rcExt = '.rc';
+exports.resExt = '.res';

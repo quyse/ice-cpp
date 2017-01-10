@@ -21,13 +21,13 @@ case 'emcc':
 		'-ffast-math', // быстрая арифметика с плавающей точкой
 		'-s', 'DOUBLE_MODE=0', // no reads of unaligned doubles
 		'-s', 'PRECISE_I64_MATH=0',
-		'-s', 'QUANTUM_SIZE=1',
 		],
 		debug: [ // опции для отладочной конфигурации
 		'-O0', // без оптимизации
 		'-D_DEBUG', // макрос _DEBUG
-		'-g', // debug info
-		'-s', 'EXCEPTION_DEBUG=1',
+		'-g4', // debug info
+		'-s', 'SAFE_HEAP=1',
+		'-s', 'ABORTING_MALLOC=1',
 		],
 		release: [ // опции для релизной конфигурации
 		'-O2', // полная оптимизация
@@ -74,14 +74,13 @@ case 'emcc':
 		'-Werror', // превращать предупреждения в ошибки
 		],
 		debug: [ // опции для отладочной конфигурации
-		'-g', // debug info
-		'-s',
-		'EXCEPTION_DEBUG=1',
+		'-g4', // debug info
+		'-s', 'SAFE_HEAP=1',
+		'-s', 'ABORTING_MALLOC=1',
 		],
 		release: [ // опции для релизной конфигурации
 		'-O2', // оптимизация
 		'--llvm-lto', '1', // link-time optimization
-		'-s', // удалить всю отладочную информацию
 		]
 	};
 	break;
@@ -97,7 +96,7 @@ exports.setLinkOptions = function(executableFile, linker) {
 exports.executableExt = '.js';
 exports.dllExt = '.js';
 
-exports.composeCommand = emccCommand; // link instead of archiving, according to recommendations
+exports.composeCommand = emccCommand;
 var composeOptions = {
 	all: [ // опции для обоих конфигураций
 	'-fmessage-length=0', // отключить перенос слишком длинных строк
@@ -105,16 +104,15 @@ var composeOptions = {
 	'-Werror', // превращать предупреждения в ошибки
 	],
 	debug: [ // опции для отладочной конфигурации
-	'-g', // debug info
-	'-s',
-	'EXCEPTION_DEBUG=1',
+	'-g4', // debug info
+	'-s', 'SAFE_HEAP=1',
+	'-s', 'ABORTING_MALLOC=1',
 	],
 	release: [ // опции для релизной конфигурации
-	'-s', // удалить всю отладочную информацию
 	]
 };
 exports.setComposeOptions = function(libraryFile, composer) {
 	var args = config.getOptions(composeOptions, composer.configuration);
 	return args.concat('-o', libraryFile, composer.objectFiles);
 };
-var libraryExt = exports.libraryExt = '.so';
+var libraryExt = exports.libraryExt = '.bc';

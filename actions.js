@@ -21,6 +21,7 @@ var Compiler = exports.Compiler = function() {
 	this.strict = true;
 };
 Compiler.prototype.platform = config.platform;
+Compiler.prototype.arch = config.arch;
 Compiler.prototype.setSourceFile = function(sourceFile) {
 	this.sourceFile = sourceFile;
 };
@@ -43,23 +44,32 @@ var Linker = exports.Linker = function() {
 	this.configuration = 'debug';
 	this.objectFiles = [];
 	this.dynamicLibraries = [];
+	this.dynamicLibraryPaths = [];
 	this.staticLibraries = [];
 	this.resFiles = [];
 };
 Linker.prototype.platform = config.platform;
+Linker.prototype.arch = config.arch;
 Linker.prototype.addObjectFile = function(objectFile) {
 	this.objectFiles.push(objectFile);
 };
 Linker.prototype.addDynamicLibrary = function(library) {
 	this.dynamicLibraries.push(library);
 };
+Linker.prototype.addDynamicLibraryPath = function(libraryPath) {
+	this.dynamicLibraryPaths.push(libraryPath);
+};
 Linker.prototype.addStaticLibrary = function(library) {
 	this.staticLibraries.push(library);
 };
+Linker.prototype.addResFile = function(resFile) {
+	this.resFiles.push(resFile);
+};
 Linker.prototype.toFull = function(configurator) {
 	toFull(this.objectFiles, configurator, config.objectExt);
+	toFull(this.dynamicLibraryPaths, configurator, '');
 	toFull(this.staticLibraries, configurator, config.libraryExt);
-	toFull(this.resFiles, configurator, '');
+	toFull(this.resFiles, configurator, config.resExt);
 	if(this.defFile)
 		this.defFile = configurator.relativeToFull(this.defFile);
 };
@@ -74,11 +84,26 @@ var Composer = exports.Composer = function() {
 	this.skip = false;
 };
 Composer.prototype.platform = config.platform;
+Composer.prototype.arch = config.arch;
 Composer.prototype.addObjectFile = function(objectFile) {
 	this.objectFiles.push(objectFile);
 };
 Composer.prototype.toFull = function(configurator) {
 	toFull(this.objectFiles, configurator, config.objectExt);
+};
+
+/**
+ * Объект-компилятор ресурсов.
+ */
+var Resourcer = exports.Resourcer = function() {
+	this.configuration = 'debug';
+	this.resourceFile = null;
+};
+Resourcer.prototype.setResourceFile = function(resourceFile) {
+	this.resourceFile = resourceFile;
+};
+Resourcer.prototype.toFull = function(configurator) {
+	this.resourceFile = configurator.relativeToFull(this.resourceFile) + config.rcExt;
 };
 
 /**

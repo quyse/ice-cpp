@@ -171,3 +171,30 @@ ice.rule(new RegExp('^(.*)' + ice.utils.regexpEscape(config.libraryExt) + '$'), 
 		});
 	});
 });
+
+// .res <= .rc
+if(config.rcExt && config.resExt) ice.rule(new RegExp('^(.+)' + ice.utils.regexpEscape(config.resExt) + '$'), function(a, file) {
+	// имя ресурсного файла без расширения
+	var resourceFile = a[1];
+
+	var configurator = Configurator.getForFile(resourceFile);
+	var resourcer = new actions.Resourcer();
+	configurator.configurator.configureResourcer(configurator.fullToRelative(resourceFile), resourcer);
+	resourcer.toFull(configurator);
+	file.dep(resourcer.resourceFile);
+	file.waitDeps(function() {
+		getCppHeaderDeps(resourcer.resourceFile, file, function() {
+			file.waitDeps(function() {
+				var args = config.platformModule.setResourceOptions(resourceFile + config.resExt, resourcer);
+
+				actions.launchProcess(config.platformModule.compileResourceCommand, args, function(err) {
+					if (err)
+						file.error(err);
+					else
+						file.ok();
+				});
+			});
+		});
+	}, true);
+
+});
