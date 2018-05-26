@@ -72,7 +72,7 @@ var platform = exports.platform;
 var platformModule = exports.platformModule = require('./platform-' + platform);
 
 var getOptions = exports.getOptions = function(options, configuration) {
-	return options.all.concat(options[configuration]);
+	return options.all.concat(options[configuration] || []);
 };
 
 exports.objectExt = platformModule.objectExt;
